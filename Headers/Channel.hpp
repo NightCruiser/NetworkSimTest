@@ -12,10 +12,5 @@ public:
         virtual bool Status_q2() = 0;
         virtual std::shared_ptr<Packet> PopPacket_q1(void) = 0;
         virtual std::shared_ptr<Packet> PopPacket_q2(void) = 0;
-private:
-        long load_;
-        long bandwidth_;
-        std::queue<std::shared_ptr<Packet>> packets_q1_;
-        std::queue<std::shared_ptr<Packet>> packets_q2_;
 };
 #endif //CHANNEL_HPP

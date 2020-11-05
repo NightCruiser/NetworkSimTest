@@ -23,6 +23,7 @@ public:
         uint32_t GetGateweay();
         uint32_t GetMac();
 private:
+        bool update_;
         uint32_t mac_;
         uint32_t gateway_;
         uint32_t address_;

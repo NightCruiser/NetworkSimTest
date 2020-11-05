@@ -1,4 +1,5 @@
 #include "../Headers/RoutingCore.hpp"
+#include <thread>
 RoutingCore::RoutingCore() {}
 RoutingCore::RoutingCore(std::string name, uint32_t mac) : name_(name), mac_(mac)  {}
 
@@ -13,10 +14,18 @@ bool RoutingCore::RecievePacket() { /*Should we inform the log?*/ /*Method for t
                         received_packets_.push_back(i.first->PopPacket_q2());
                 }
         }
-        
+        return true;
 }
-bool RoutingCore::RecievePacket(std::shared_ptr<Packet>) {}
-bool RoutingCore::Start() {}
+bool RoutingCore::RecievePacket(std::shared_ptr<Packet> packet) {
+        packet->Handshake(address_);
+
+ /*idea is to recieve wrong routet packet or NOT? and set it's handshake false if it it is not for us*/
+ /*Router should noot recieve packets by his method*/
+        return false;
+}
+bool RoutingCore::Start() {
+       return RecievePacket();
+}
 bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {}
 bool RoutingCore::RequestConnection(std::shared_ptr<Node>, std::shared_ptr<Channel>) {} /*Here the connection initiator should specify recieve/transmit queues of channel*/
 bool RoutingCore::ApproveConnection(std::shared_ptr<Node>, std::shared_ptr<Channel>) {}
