@@ -1,12 +1,11 @@
-#ifndef ROUTINGCORE_HPP
-#define ROUTINGCORE_HPP
+#ifndef NODECONTROLLER_HPP
+#define NODECONTROLLER_HPP
+#include <mutex>
 #include <memory>
-#include "Node.hpp"
-class RoutingCore : public Node {
+#include "Functionalities.hpp"
+
+class NodeController : public Functionalities {
 public:
-        RoutingCore(const RoutingCore&) = delete;
-        RoutingCore();
-        RoutingCore(std::string, uint32_t);
         bool RecievePacket();
         bool RecievePacket(std::shared_ptr<Packet>);
         bool Start();
@@ -23,13 +22,15 @@ public:
         uint32_t GetGateweay();
         uint32_t GetMac();
 private:
+        std::mutex mtx_;
+        bool update_;
         uint32_t mac_;
         uint32_t gateway_;
         uint32_t address_;
         std::pair<double, double> location_;
         std::string name_;
         std::list<std::shared_ptr<Packet>> received_packets_;
-        std::list<std::pair<std::shared_ptr<Channel>, int>> interfaces_; /*First - pointer to a channel Second - Input queue*/
+        std::list<std::shared_ptr<Channel>> interfaces_;
 };
 
-#endif //ROUTINGCORE_HPP
+#endif //NODECONTROLLER_HPP
