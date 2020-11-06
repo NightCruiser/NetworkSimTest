@@ -2,6 +2,7 @@
 #define TWISTEDPAIR_HPP
 #include <thread>
 #include <mutex>
+#include <list>
 #include "Wired.hpp"
 
  /*MULTITHREADING!!!*/

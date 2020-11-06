@@ -1,5 +1,6 @@
 #ifndef NODE_HPP
 #define NODE_HPP
+#pragma once
 #include <utility>
 #include <list>
 #include <string>
@@ -32,4 +33,4 @@ public:
         virtual uint32_t GetMac() = 0;        
 };
 
-#endif //NODE_HPP
+#endif //NODE_HPP*/

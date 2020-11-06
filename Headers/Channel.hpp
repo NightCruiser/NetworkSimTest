@@ -2,6 +2,7 @@
 #define CHANNEL_HPP
 #include <queue>
 #include "Packet.hpp"
+#include "Node.hpp"
 typedef enum queues_ {first = 1, second = 2} queue;
 class Channel {
 public:
