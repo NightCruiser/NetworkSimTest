@@ -2,7 +2,7 @@
 #include <chrono>
 #include <iostream> /*delete after tests*/
 RoutingCore::RoutingCore() {}
-RoutingCore::RoutingCore(std::string name, uint32_t mac, std::pair<double, double> location) : name_(name), mac_(mac), location_(location)  {}
+RoutingCore::RoutingCore(std::string name, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) : name_(name), mac_(mac), location_(location), pool_(pool)  {}
 
 RoutingCore::~RoutingCore() {
 }
@@ -49,7 +49,6 @@ bool RoutingCore::Start() {
                                 if (ch->Status_queue(queue_)) {
                                         std::cout << name_ << std::this_thread::get_id() << "newPacket" << queue_ << std::endl; /*DELETE*/
                                         this->ReceivePacket(ch->GetPacketFromQueue(queue_));
-                                        ch->PopPacketFromQueue(queue_);
                                 }
                        }
                }        /*End of Lambda*/
@@ -69,11 +68,11 @@ bool RoutingCore::Start() {
 }
 
 bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {
-
+        return false;
 } /*LATER*/
 
 
-bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, long bandwidth) { 
+bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth) { 
         /*Here the connection initiator should specify recieve/transmit queues of channel*/
         if (target_address == address_) {return false;} /*checking for connection to itself*/
         std::shared_ptr<Channel> ch;
@@ -96,6 +95,7 @@ bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, 
         }
        return false;
 }
+
 bool RoutingCore::ApproveConnection(std::shared_ptr<Channel> ch, queue q) {
         std::pair<std::shared_ptr<Channel>, queue> interface = std::make_pair(ch,q);
         ch->SetDevice(std::make_shared<Node>(*this), second);

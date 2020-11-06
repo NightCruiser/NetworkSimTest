@@ -11,7 +11,7 @@ uint32_t TcpPacket::GetDestinationMac() {
 uint32_t TcpPacket::GetSendersMac() {
         return 0;
 }
-size_t TcpPacket::GetSize() {
+unsigned TcpPacket::GetSize() {
         return size_;
 }
 std::string TcpPacket::GetMessage() {
@@ -19,4 +19,10 @@ std::string TcpPacket::GetMessage() {
 }
 bool TcpPacket::Handshake(uint32_t) {
         received_ = true;
+}
+
+bool TcpPacket::GetDeliveryStatus() { /*Not sure about mutex here*/
+        packet_mtx_.lock();
+        return received_;
+        packet_mtx_.unlock();
 }
