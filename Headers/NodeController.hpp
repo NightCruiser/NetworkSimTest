@@ -22,6 +22,7 @@ public:
         uint32_t GetGateweay();
         uint32_t GetMac();
 private:
+        std::shared_ptr<Node> node_;
         std::mutex mtx_;
         bool update_;
         uint32_t mac_;

@@ -6,11 +6,10 @@
 class Channel {
 public:
         virtual ~Channel() {}
-        virtual bool PushPacket_q1(std::shared_ptr<Packet>) = 0;
-        virtual bool PushPacket_q2(std::shared_ptr<Packet>) = 0;
-        virtual bool Status_q1() = 0;
-        virtual bool Status_q2() = 0;
-        virtual std::shared_ptr<Packet> PopPacket_q1(void) = 0;
-        virtual std::shared_ptr<Packet> PopPacket_q2(void) = 0;
+        virtual bool PushPacketToQueue(std::shared_ptr<Packet>, queue) = 0;
+        virtual bool Status_queue(queue) = 0;;
+        virtual bool PopPacketFromQueue(queue) = 0;
+        virtual std::shared_ptr<Packet> GetPacketFromQueue(queue) = 0;
+        virtual void SetDevice(std::shared_ptr<Node>, queue) = 0;
 };
 #endif //CHANNEL_HPP
