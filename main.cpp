@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Headers/SimulationController.hpp"
-#include "Headers/Node.hpp"
 int main(int argc, char* argv[]) {
 	int choice = 0;
 	SimulationController controller;

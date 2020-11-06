@@ -9,6 +9,7 @@ void Client::Stop() {
 
 bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
         received_packets_.push_back(packet);
+        packet->Handshake(address_); //what if timed out?
         return true;
 }
 bool Client::Start() {

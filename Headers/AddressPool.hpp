@@ -1,6 +1,6 @@
 #ifndef ADDRESSPOOL_HPP
 #define ADDRESSPOOL_HPP
-#include "Node.hpp"
+#include "RoutingCore.hpp"
 
 class AddressPool {
 public:

@@ -3,7 +3,7 @@
 #include <memory>
 #include <mutex>
 #include <thread>
-#include "Node.hpp"
+#include "Functionalities.hpp"
 class RoutingCore : public Node {
 public:
         RoutingCore(const RoutingCore&) = delete;
