@@ -9,7 +9,8 @@ class RoutingCore : public Node {
 public:
         RoutingCore(const RoutingCore&) = delete;
         RoutingCore();
-        RoutingCore(std::string name, uint32_t mac, std::pair<double, double>);
+        RoutingCore(std::string, uint32_t, std::pair<double, double>);
+        void Stop();
         bool RecievePacket();
         bool ReceivePacket(std::shared_ptr<Packet>);
         bool Start();
@@ -18,7 +19,7 @@ public:
         bool ApproveConnection(std::shared_ptr<Channel>, queue);
         bool GeneratePacket();
         bool RequestAddressesFromDhcp();
-        uint32_t CastAddresses();
+        uint32_t CastAddress();
         bool SetAddress(uint32_t);
         bool SetGateway(uint32_t);
         uint32_t GetAddress();

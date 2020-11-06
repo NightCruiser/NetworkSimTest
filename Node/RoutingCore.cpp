@@ -26,7 +26,11 @@ bool RoutingCore::ReceivePacket(std::shared_ptr<Packet> packet) { /*Should we in
         mtx_.unlock();
 }
 
+void RoutingCore::Stop() {
+        update_ = true;
+}
 bool RoutingCore::Start() {
+        update_ = false;
        if (interfaces_.size() == 0) {
                return false;
        }
@@ -41,8 +45,9 @@ bool RoutingCore::Start() {
                        while (true) {
                                /*refresh rate*/
                                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                                std::cout << std::this_thread::get_id() << "listening on queue " << queue_ << std::endl; /*DELETE*/
+                                std::cout << name_ << std::this_thread::get_id() << "listening on queue " << queue_ << std::endl; /*DELETE*/
                                 if (ch->Status_queue(queue_)) {
+                                        std::cout << name_ << std::this_thread::get_id() << "newPacket" << queue_ << std::endl; /*DELETE*/
                                         this->ReceivePacket(ch->GetPacketFromQueue(queue_));
                                         ch->PopPacketFromQueue(queue_);
                                 }
@@ -62,7 +67,12 @@ bool RoutingCore::Start() {
        }
        return true;
 }
-bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {}
+
+bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {
+
+} /*LATER*/
+
+
 bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, long bandwidth) { 
         /*Here the connection initiator should specify recieve/transmit queues of channel*/
         if (target_address == address_) {return false;} /*checking for connection to itself*/
@@ -92,18 +102,26 @@ bool RoutingCore::ApproveConnection(std::shared_ptr<Channel> ch, queue q) {
         interfaces_.push_back(interface);
         return true;
 }
-bool RoutingCore::GeneratePacket() {}
-bool RoutingCore::RequestAddressesFromDhcp() {
-        pool_->GetNodeByAddress(gateway_);
+bool RoutingCore::GeneratePacket() {
+        /*Routing device will not generate packets*/
+        return false;
 }
-uint32_t RoutingCore::CastAddresses() {
+bool RoutingCore::RequestAddressesFromDhcp() {
+        std::shared_ptr<Node> dhcp_ = pool_->GetNodeByAddress(gateway_);
+        uint32_t tmp = dhcp_->CastAddress();
+        /*Inform the pool about new address*/
+        return tmp ? pool_->AddNode(std::make_pair(std::make_shared<Node>(*this), tmp)), address_ = tmp : false; /*check algorithm in pool*/
+}
+uint32_t RoutingCore::CastAddress() {
         if (node_) {
-                return node_->CastAddresses();
+                return node_->CastAddress();
         }
         return 0;
 }
 bool RoutingCore::SetAddress(uint32_t address) {
-        address_ = address_;
+        address_ = address;
+        /*Inform the pool about new address*/
+        pool_->AddNode(std::make_pair(std::make_shared<Node>(*this), address_));
 }
 bool RoutingCore::SetGateway(uint32_t gateway) {
         gateway_ = gateway;

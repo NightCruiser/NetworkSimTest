@@ -1,17 +1,17 @@
 #include "../Headers/TwistedPair.hpp"
 #include <iostream>
-TwistedPair::TwistedPair(long bandwidth) : bandwidth_(bandwidth), load_(0) {}
+TwistedPair::TwistedPair(long bandwidth) : bandwidth_(bandwidth * 2), load_(0) {} /*x2 for full duplex*/
 
-bool PushPacketToQueue(std::shared_ptr<Packet>, int) {
+bool TwistedPair::PushPacketToQueue(std::shared_ptr<Packet> packet, queue q) {
+        q == first ? packets_q1_.push(packet) : packets_q2_.push(packet);
+}
+bool TwistedPair::Status_queue(queue) {
 
 }
-bool Status_queue(int) {
+bool TwistedPair::PopPacketFromQueue(queue) {
 
 }
-bool PopPacketFromQueue(int) {
-
-}
-std::shared_ptr<Packet> GetPacketFromQueue(int) {
+std::shared_ptr<Packet> TwistedPair::GetPacketFromQueue(queue) {
         
 }
 

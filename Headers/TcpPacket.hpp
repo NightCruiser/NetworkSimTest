@@ -3,6 +3,7 @@
 #include "Packet.hpp"
 class TcpPacket : public Packet {
 public:
+        TcpPacket(uint32_t, uint32_t, std::string, unsigned);
         uint32_t GetDestination(); /*For sure 4bytes we will use adresses*/
         uint32_t GetDestinationMac();
         uint32_t GetSendersMac();
@@ -10,11 +11,12 @@ public:
         std::string GetMessage();
         bool Handshake(uint32_t);
 private:
+        std::string message_;
         unsigned size_;
         uint32_t senders_mac_;
         uint32_t destination_mac_; 
         uint32_t senders_address_;
-        uint32_t destinatio_address_;
-        bool recieved_;
+        uint32_t destination_address_;
+        bool received_;
 }; 
 #endif //TCPPACKET_HPP
