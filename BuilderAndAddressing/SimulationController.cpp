@@ -13,10 +13,18 @@ void SimulationController::StartSimulation() {
                 std::shared_ptr<std::thread> th(new std::thread([&, i]() /*was make_shared*/
                 {       /*Lambda*/
                         i.first->Start();
+                        std::cout << "Started" << std::endl;
                 }));
                 th->detach();
+                threads_.push_back(th);
                 //i.first->Start();
+                
         }
+        std::cout << "FOR loop ends SimController" << std::endl; //TEST
+       /* while (active_) {  //new 3 //NO NEED
+                std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+                std::cout << "SimulationStart running" << std::endl;
+        }*/
 }
                                 /*Enum nodes and name*/ /*without connections for testing*/
 bool SimulationController::LoadCheckConfiguration(std::list<std::pair<nodes_, std::string>> map_nodes) { /*will receive file later with locations and so on, now simple for multithreadinfg tests*/
@@ -39,11 +47,12 @@ bool SimulationController::BuildNetwork(std::string test) { /*Just FOR TEST 15 c
         pool_->AddNode(std::make_pair(tempNode, (uint32_t)321)); /*adding to pool*/
         /*CreateNode(nodes_ node, std::string name, uint32_t mac, std::pair<double,double> location, std::shared_ptr<AddressPool> pool)*/
         
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 5; i++) {
                 std::cout << "Creating Node " << (i + 1) << std::endl; /*DELETE*/
-                std::shared_ptr<Node> tmp = Creator::CreateNode(client, "Client " + i, i, std::make_pair(15,52), pool_);
+                std::string name = "Client " + std::to_string(i); /*DELETE*/
+                std::shared_ptr<Node> tmp = Creator::CreateNode(client, name, i, std::make_pair(15,52), pool_);
                 if (tmp->RequestConnection((uint32_t)321, twisted_pair, (unsigned)2000)) {
-                        std::cout << "Node " << (i + 1) << "connected to " << tempNode->GetName() << std::endl; /*DELETE*/
+                        std::cout << tmp->GetName() << " connected to " << tempNode->GetName() << std::endl; /*DELETE*/
                 };
                 pool_->AddNode(std::make_pair(tmp, i));
                 sim_nodes_.push_back(std::make_pair(tmp, client));
@@ -58,6 +67,7 @@ void SimulationController::StopRouters() {
         for (auto i : sim_nodes_) {
                 i.first->Stop();
         }
+        active_ = false; //new3
 }
 
 bool SimulationController::GetStatus() {

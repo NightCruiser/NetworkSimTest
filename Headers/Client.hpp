@@ -20,8 +20,10 @@ public:
         uint32_t GetAddress();
         std::string GetName();
         uint32_t GetGateweay();
-        uint32_t GetMac();        
+        uint32_t GetMac();
+        bool GetStatus();        
 private:
+        std::mutex mtx_;
         std::string name_;
         uint32_t mac_;
         std::pair<double, double> location_;

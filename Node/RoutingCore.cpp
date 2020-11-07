@@ -30,22 +30,32 @@ bool RoutingCore::ReceivePacket(std::shared_ptr<Packet> packet) { /*Should we in
 void RoutingCore::Stop() {
         update_ = true;
 }
+
+bool RoutingCore::GetStatus() {
+        //mtx_.lock();
+        return update_;
+        //mtx_.unlock();
+}
+
 bool RoutingCore::Start() {
         update_ = false;
        if (interfaces_.size() == 0) {
                return false;
        }
+       int x = 1; //TEST
        /*Creating threads for each interface port, using lambda expression specifying the behavior*/
        for (auto i : interfaces_) {
                std::this_thread::sleep_for(std::chrono::milliseconds(300)); /*delay on creating threads*/
-                std::cout << name_ << "Creating thread" << std::endl; /*DELETE*/
+                std::cout << name_ << "Creating thread" << x << std::endl; /*DELETE*/
+                ++x; //TEST
                std::shared_ptr<std::thread> th(new std::thread([&]()                
                {        /*Lambda Expression*/
                        queue queue_ = i.second;
                        std::shared_ptr<Channel> ch = i.first;
                        while (true) {
+                               if (this->GetStatus()) {break;}
                                /*refresh rate*/
-                                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                                std::this_thread::sleep_for(std::chrono::milliseconds(3000));
                                 std::cout << name_ << std::this_thread::get_id() << " listening on queue " << queue_ << std::endl; /*DELETE*/
                                 if (ch->Status_queue(queue_)) {
                                         std::cout << name_ << std::this_thread::get_id() << "newPacket" << queue_ << std::endl; /*DELETE*/
@@ -54,6 +64,8 @@ bool RoutingCore::Start() {
                        }
                }        /*End of Lambda*/
                ));
+               std::this_thread::sleep_for(std::chrono::milliseconds(10)); //TEST //don't know why but without it SegFault
+                                                                           //Need to figure this out     
                th->detach();
                threads_.push_back(th);
        }

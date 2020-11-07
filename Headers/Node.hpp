@@ -32,7 +32,8 @@ public:
         virtual uint32_t GetAddress() = 0;
         virtual std::string GetName() = 0;
         virtual uint32_t GetGateweay() = 0;
-        virtual uint32_t GetMac() = 0;        
+        virtual uint32_t GetMac() = 0;
+        virtual bool GetStatus() = 0;        
 };
 
 #endif //NODE_HPP*/

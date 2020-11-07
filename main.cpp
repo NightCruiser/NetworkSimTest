@@ -1,8 +1,10 @@
 #include <iostream>
 #include "Headers/SimulationController.hpp"
+#include <thread> //new3
 int main(int argc, char* argv[]) {
 	int choice = 0;
 	SimulationController controller;
+	std::shared_ptr<std::thread> sim_thread; //new3
 	do {
 	std::cout << "1 - Load Fake config\n"
 		<< "2 - Build Fake Network\n"
@@ -17,7 +19,7 @@ int main(int argc, char* argv[]) {
 	case 2 :
 		controller.BuildNetwork("test");
 		break;
-	case 3 : 
+	case 3 :
 		controller.StartSimulation();
 		break;
 	case 4 : 

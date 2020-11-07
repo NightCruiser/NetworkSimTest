@@ -27,12 +27,13 @@ public:
         std::string GetName();
         uint32_t GetGateweay();
         uint32_t GetMac();
+        bool GetStatus();
 private:
+        std::mutex mtx_;
         std::string name_;
         uint32_t mac_;
         std::pair<double, double> location_;
         std::shared_ptr<AddressPool> pool_;
-        std::mutex mtx_;
         bool update_;
         uint32_t gateway_;
         uint32_t address_;

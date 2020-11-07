@@ -12,10 +12,17 @@ bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
         packet->Handshake(address_); //what if timed out?
         return true;
 }
+
+bool Client::GetStatus() {
+        //mtx_.lock();
+        return update_;
+        //mtx_.unlock();
+}
 bool Client::Start() {
         std::cout << "Client Start Called" << std::endl;
         update_ = false;
         if (!interface_.first) {
+                std::cout << GetName() << "notConnected" << std::endl; /*DELETE*/
                 return false;
         }
         /*Creating thread for interface port, using lambda expression specifying the behavior*/
@@ -27,8 +34,9 @@ bool Client::Start() {
         {        /*Lambda Expression*/
                 while (true) {
                         /*refresh rate*/
+                        if (this->GetStatus()) {break;}
                         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                        std::cout << name_ << std::this_thread::get_id() << "listening on queue " << q << std::endl; /*DELETE*/
+                        std::cout << name_  << ": "<< std::this_thread::get_id() << " listening on queue " << q << std::endl; /*DELETE*/
                         if (ch->Status_queue(q)) {
                                 std::cout << name_ << std::this_thread::get_id() << "newPacket" << q << std::endl; /*DELETE*/
                                 this->ReceivePacket(ch->GetPacketFromQueue(q));
@@ -70,7 +78,7 @@ bool Client::RequestConnection(uint32_t target_address, channels_ channel, unsig
         std::cout << "Requestng ApproveConnection" << std::endl; /*DELETE*/
         if (target->ApproveConnection(ch, first)) {
                  /*initiator will listen the second queue*/
-                std::pair<std::shared_ptr<Channel>, queue> interface_ = std::make_pair(ch, second);
+                interface_ = std::make_pair(ch, second);
                 ch->SetDevice(std::shared_ptr<Node>(this), first); /*was make_shared*/
                 gateway_ = target->GetAddress();
                 return true;
