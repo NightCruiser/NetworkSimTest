@@ -4,10 +4,13 @@
 #include <mutex>
 #include <thread>
 #include "Functionalities.hpp"
-class RoutingCore : public Node {
+
+class AddressPool; //forward declaration new
+class RoutingCore : public Functionalities {
 public:
         RoutingCore(const RoutingCore&) = delete;
         RoutingCore();
+        ~RoutingCore();
         RoutingCore(std::string, uint32_t, std::pair<double, double>, std::shared_ptr<AddressPool>);
         void Stop();
         bool ReceivePacket(std::shared_ptr<Packet>);
@@ -25,14 +28,14 @@ public:
         uint32_t GetGateweay();
         uint32_t GetMac();
 private:
+        std::string name_;
+        uint32_t mac_;
+        std::pair<double, double> location_;
         std::shared_ptr<AddressPool> pool_;
         std::mutex mtx_;
         bool update_;
-        uint32_t mac_;
         uint32_t gateway_;
         uint32_t address_;
-        std::pair<double, double> location_;
-        std::string name_;
         std::list<std::shared_ptr<Packet>> received_packets_;
         std::list<std::pair<std::shared_ptr<Channel>, queue>> interfaces_; /*First - pointer to a channel Second - Input queue*/
         std::list<std::shared_ptr<std::thread>> threads_;

@@ -22,13 +22,13 @@ public:
         uint32_t GetGateweay();
         uint32_t GetMac();        
 private:
+        std::string name_;
+        uint32_t mac_;
+        std::pair<double, double> location_;
         std::shared_ptr<AddressPool> pool_;
         std::list<std::shared_ptr<Packet>> received_packets_;
         std::list<std::shared_ptr<Packet>> packets_;
         std::pair<std::shared_ptr<Channel>, queue> interface_;
-        std::pair<double, double> location_;
-        std::string name_;
-        uint32_t mac_;
         uint32_t gateway_;
         uint32_t address_;
         bool update_;

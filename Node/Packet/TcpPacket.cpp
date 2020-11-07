@@ -19,6 +19,7 @@ std::string TcpPacket::GetMessage() {
 }
 bool TcpPacket::Handshake(uint32_t) {
         received_ = true;
+        return true;
 }
 
 bool TcpPacket::GetDeliveryStatus() { /*Not sure about mutex here*/

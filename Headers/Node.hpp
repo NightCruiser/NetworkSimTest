@@ -1,6 +1,5 @@
 #ifndef NODE_HPP
 #define NODE_HPP
-#pragma once
 #include <utility>
 #include <list>
 #include <string>
@@ -9,9 +8,12 @@
 #include "Channel.hpp"
 #include "TwistedPair.hpp"
 #include "AddressPool.hpp"
+/*#include "Packet.hpp" //new
+#include "Channel.hpp" //new */
 enum channels_ {twisted_pair = 1, optical, wifi, m_4g, m_5g};
 enum nodes_ {router = 1, client};
-typedef enum queues_ {first = 1, second = 2} queue;
+//typedef enum queues_ {first = 1, second = 2} queue;
+class Channel; //new Forward declaration avoiding circular dependency
 
 class Node {
 public:

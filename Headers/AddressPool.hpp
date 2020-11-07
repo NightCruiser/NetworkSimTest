@@ -1,10 +1,15 @@
 #ifndef ADDRESSPOOL_HPP
 #define ADDRESSPOOL_HPP
-#include "RoutingCore.hpp"
-
+//#include "RoutingCore.hpp"
+/*#include <memory> //new */
+#include "Node.hpp" //new
+/*#include <mutex> //new*/
+class Node; //forward new
 class AddressPool {
 public:
-        std::shared_ptr<Node> GetNodeByAddress(uint32_t);
+        AddressPool(); //new
+        ~AddressPool() {} //new
+        std::shared_ptr<Node> GetNodeByAddress(const uint32_t);
         void AddNode(std::pair<std::shared_ptr<Node>, uint32_t>);
 private:
         std::list<std::pair<std::shared_ptr<Node>, uint32_t>> nodes_;

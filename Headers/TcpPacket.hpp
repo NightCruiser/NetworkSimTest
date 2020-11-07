@@ -13,12 +13,12 @@ public:
         bool Handshake(uint32_t);
         bool GetDeliveryStatus();
 private:
+        uint32_t senders_address_;
+        uint32_t destination_address_;
         std::string message_;
         unsigned size_;
         uint32_t senders_mac_;
         uint32_t destination_mac_; 
-        uint32_t senders_address_;
-        uint32_t destination_address_;
         bool received_;
         std::mutex packet_mtx_;
 }; 

@@ -16,9 +16,9 @@ public:
         void DecreaseLoad(queue, unsigned);
 private:
         std::mutex ch_mtx_;
+        unsigned bandwidth_;
         unsigned load_q1_;
         unsigned load_q2_;
-        unsigned bandwidth_;
         std::queue<std::shared_ptr<Packet>> packets_q1_;
         std::queue<std::shared_ptr<Packet>> packets_q2_;
         std::shared_ptr<Node> device_one_;

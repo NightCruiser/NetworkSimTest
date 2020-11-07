@@ -24,6 +24,7 @@ bool RoutingCore::ReceivePacket(std::shared_ptr<Packet> packet) { /*Should we in
         received_packets_.push_back(packet);
 
         mtx_.unlock();
+        return true;
 }
 
 void RoutingCore::Stop() {
@@ -38,14 +39,14 @@ bool RoutingCore::Start() {
        for (auto i : interfaces_) {
                std::this_thread::sleep_for(std::chrono::milliseconds(300)); /*delay on creating threads*/
                 std::cout << name_ << "Creating thread" << std::endl; /*DELETE*/
-               std::shared_ptr<std::thread> th = std::make_shared<std::thread> (std::thread([&]()                
+               std::shared_ptr<std::thread> th(new std::thread([&]()                
                {        /*Lambda Expression*/
                        queue queue_ = i.second;
                        std::shared_ptr<Channel> ch = i.first;
                        while (true) {
                                /*refresh rate*/
                                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                                std::cout << name_ << std::this_thread::get_id() << "listening on queue " << queue_ << std::endl; /*DELETE*/
+                                std::cout << name_ << std::this_thread::get_id() << " listening on queue " << queue_ << std::endl; /*DELETE*/
                                 if (ch->Status_queue(queue_)) {
                                         std::cout << name_ << std::this_thread::get_id() << "newPacket" << queue_ << std::endl; /*DELETE*/
                                         this->ReceivePacket(ch->GetPacketFromQueue(queue_));
@@ -71,24 +72,25 @@ bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {
         return false;
 } /*LATER*/
 
-
+/*Need REFACTOR*/
 bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth) { 
         /*Here the connection initiator should specify recieve/transmit queues of channel*/
         if (target_address == address_) {return false;} /*checking for connection to itself*/
-        std::shared_ptr<Channel> ch;
+        Channel *tmpChannelPtr;
         switch (channel) {
         case twisted_pair:
-                ch = std::make_shared<Channel>(TwistedPair(bandwidth));
+                tmpChannelPtr = new TwistedPair(bandwidth); /*was make_shared*/
                 break;
         default:
                 return false;
         }
         std::shared_ptr<Node> target = pool_->GetNodeByAddress(target_address);
+        std::shared_ptr<Channel> ch(tmpChannelPtr); /*was make_shared*/
         /*initiator will always set it's transmission queue as first*/
         if (target->ApproveConnection(ch, first)) {
                  /*initiator will listen the second queue*/
                 std::pair<std::shared_ptr<Channel>, queue> interface = std::make_pair(ch, second);
-                ch->SetDevice(std::make_shared<Node>(*this), first);
+                ch->SetDevice(std::shared_ptr<Node>(this), first); /*was make_shared*/
                 interfaces_.push_back(interface);
                 gateway_ = target->GetAddress();
                 return true;
@@ -98,7 +100,7 @@ bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, 
 
 bool RoutingCore::ApproveConnection(std::shared_ptr<Channel> ch, queue q) {
         std::pair<std::shared_ptr<Channel>, queue> interface = std::make_pair(ch,q);
-        ch->SetDevice(std::make_shared<Node>(*this), second);
+        ch->SetDevice(std::shared_ptr<Node>(this), second); /*was make_shared*/
         interfaces_.push_back(interface);
         return true;
 }
@@ -109,8 +111,8 @@ bool RoutingCore::GeneratePacket() {
 bool RoutingCore::RequestAddressesFromDhcp() {
         std::shared_ptr<Node> dhcp_ = pool_->GetNodeByAddress(gateway_);
         uint32_t tmp = dhcp_->CastAddress();
-        /*Inform the pool about new address*/
-        return tmp ? pool_->AddNode(std::make_pair(std::make_shared<Node>(*this), tmp)), address_ = tmp : false; /*check algorithm in pool*/
+        /*Inform the pool about new address*/           /*was make_shared*/
+        return tmp ? pool_->AddNode(std::make_pair(std::shared_ptr<Node>(this), tmp)), address_ = tmp : false; /*check algorithm in pool*/
 }
 uint32_t RoutingCore::CastAddress() {
         if (node_) {
@@ -121,10 +123,12 @@ uint32_t RoutingCore::CastAddress() {
 bool RoutingCore::SetAddress(uint32_t address) {
         address_ = address;
         /*Inform the pool about new address*/
-        pool_->AddNode(std::make_pair(std::make_shared<Node>(*this), address_));
+        pool_->AddNode(std::make_pair(std::shared_ptr<Node>(this), address_));
+        return true;
 }
 bool RoutingCore::SetGateway(uint32_t gateway) {
         gateway_ = gateway;
+        return true;
 }
 uint32_t RoutingCore::GetAddress() {
         return address_;
