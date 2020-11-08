@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream> /*delete after tests*/
 RoutingCore::RoutingCore() {}
+/*ADD Additional constructor for other functionalities*/
 RoutingCore::RoutingCore(std::string name, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) : name_(name), mac_(mac), location_(location), pool_(pool)  {}
 
 RoutingCore::~RoutingCore() {
@@ -32,9 +33,9 @@ void RoutingCore::Stop() {
 }
 
 bool RoutingCore::GetStatus() {
-        //mtx_.lock();
+        mtx_.lock();
         return update_;
-        //mtx_.unlock();
+        mtx_.unlock();
 }
 
 bool RoutingCore::Start() {

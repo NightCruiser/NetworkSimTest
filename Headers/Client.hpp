@@ -28,12 +28,12 @@ private:
         uint32_t mac_;
         std::pair<double, double> location_;
         std::shared_ptr<AddressPool> pool_;
+        bool update_;
+        uint32_t gateway_;
+        uint32_t address_;
         std::list<std::shared_ptr<Packet>> received_packets_;
         std::list<std::shared_ptr<Packet>> packets_;
         std::pair<std::shared_ptr<Channel>, queue> interface_;
-        uint32_t gateway_;
-        uint32_t address_;
-        bool update_;
         std::list<std::shared_ptr<std::thread>> threads_;
 };
 #endif //CLIENT_HPP
