@@ -1,9 +1,6 @@
 #ifndef ADDRESSPOOL_HPP
 #define ADDRESSPOOL_HPP
-//#include "RoutingCore.hpp"
-/*#include <memory> //new */
 #include "Node.hpp" //new
-/*#include <mutex> //new*/
 class Node; //forward new
 class AddressPool {
 public:

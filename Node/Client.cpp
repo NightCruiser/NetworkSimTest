@@ -3,9 +3,6 @@
 /*MULTITHREADING*/
 Client::Client(std::string name, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
         : name_(name), mac_(mac), location_(location), pool_(pool) {}
-void Client::Stop() {
-        update_ = true;
-}
 
 bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
         received_packets_.push_back(packet);
@@ -18,45 +15,7 @@ bool Client::GetStatus() {
         return update_;
         //mtx_.unlock();
 }
-bool Client::Start() {
-        std::cout << "Client Start Called" << std::endl;
-        update_ = false;
-        if (!interface_.first) {
-                std::cout << GetName() << "notConnected" << std::endl; /*DELETE*/
-                return false;
-        }
-        /*Creating thread for interface port, using lambda expression specifying the behavior*/
-        queue q = interface_.second;
-        std::shared_ptr<Channel> ch = interface_.first;
-        std::this_thread::sleep_for(std::chrono::milliseconds(300)); /*delay on creating threads*/
-        std::cout << name_ << "Creating thread" << std::endl; /*DELETE*/
-        std::shared_ptr<std::thread> th = std::make_shared<std::thread> (std::thread([&, q, ch]()                
-        {        /*Lambda Expression*/
-                while (true) {
-                        /*refresh rate*/
-                        if (this->GetStatus()) {break;}
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                        std::cout << name_  << ": "<< std::this_thread::get_id() << " listening on queue " << q << std::endl; /*DELETE*/
-                        if (ch->Status_queue(q)) {
-                                std::cout << name_ << std::this_thread::get_id() << "newPacket" << q << std::endl; /*DELETE*/
-                                this->ReceivePacket(ch->GetPacketFromQueue(q));
-                        }
-                }
-        }        /*End of Lambda*/
-        ));
-        th->detach();
-        threads_.push_back(th);
 
-        while (true) {
-                if (!update_) {
-                        break;
-                }
-                /*For Tests will print out status, later will reroute packets*/
-                std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-                std::cout << name_ << std::this_thread::get_id() << "Running" << std::endl; /*DELETE*/
-        }
-        return true;
-}
 bool Client::SendPacket(uint32_t, std::shared_ptr<Packet>) {
         return false; /*LATER*/
 }

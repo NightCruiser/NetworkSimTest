@@ -9,17 +9,7 @@ RoutingCore::~RoutingCore() {
 }
 
 bool RoutingCore::ReceivePacket(std::shared_ptr<Packet> packet) { /*Should we inform the log?*/ /*Method for tests without controller*/
-/*
-        for (auto i : interfaces_) {
-                if (i.second == 1 || i.first->Status_q1()) {
-                        received_packets_.push_back(i.first->PopPacket_q1());
-                }
-                if (i.first->Status_q2()) {
-                        received_packets_.push_back(i.first->PopPacket_q2());
-                }
-        }
-        return true;
-        */
+
         mtx_.lock();
 
         received_packets_.push_back(packet);
@@ -28,9 +18,6 @@ bool RoutingCore::ReceivePacket(std::shared_ptr<Packet> packet) { /*Should we in
         return true;
 }
 
-void RoutingCore::Stop() {
-        update_ = true;
-}
 
 bool RoutingCore::GetStatus() {
         mtx_.lock();
@@ -38,48 +25,6 @@ bool RoutingCore::GetStatus() {
         mtx_.unlock();
 }
 
-bool RoutingCore::Start() {
-        update_ = false;
-       if (interfaces_.size() == 0) {
-               return false;
-       }
-       int x = 1; //TEST
-       /*Creating threads for each interface port, using lambda expression specifying the behavior*/
-       for (auto i : interfaces_) {
-               std::this_thread::sleep_for(std::chrono::milliseconds(300)); /*delay on creating threads*/
-                std::cout << name_ << "Creating thread" << x << std::endl; /*DELETE*/
-                ++x; //TEST
-               std::shared_ptr<std::thread> th(new std::thread([&]()                
-               {        /*Lambda Expression*/
-                       queue queue_ = i.second;
-                       std::shared_ptr<Channel> ch = i.first;
-                       while (true) {
-                               if (this->GetStatus()) {break;}
-                               /*refresh rate*/
-                                std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-                                std::cout << name_ << std::this_thread::get_id() << " listening on queue " << queue_ << std::endl; /*DELETE*/
-                                if (ch->Status_queue(queue_)) {
-                                        std::cout << name_ << std::this_thread::get_id() << "newPacket" << queue_ << std::endl; /*DELETE*/
-                                        this->ReceivePacket(ch->GetPacketFromQueue(queue_));
-                                }
-                       }
-               }        /*End of Lambda*/
-               ));
-               std::this_thread::sleep_for(std::chrono::milliseconds(10)); //TEST //don't know why but without it SegFault
-                                                                           //Need to figure this out     
-               th->detach();
-               threads_.push_back(th);
-       }
-       while (true) {
-               if (!update_) {
-                       break;
-               }
-               /*For Tests will print out status, later will reroute packets*/
-               std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-               std::cout << name_ << std::this_thread::get_id() << "Running" << std::endl; /*DELETE*/
-       }
-       return true;
-}
 
 bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {
         return false;

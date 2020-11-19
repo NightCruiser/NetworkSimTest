@@ -23,7 +23,6 @@ int main(int argc, char* argv[]) {
 		controller.StartSimulation();
 		break;
 	case 4 : 
-		controller.StopRouters();
 		break;
 	case 0 :
 		std::cout << "Thanks For Watching!" << std::endl;

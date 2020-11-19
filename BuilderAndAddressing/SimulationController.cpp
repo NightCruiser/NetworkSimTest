@@ -5,26 +5,7 @@ SimulationController::SimulationController() : uploaded_(false), ready_(false), 
         pool_(new AddressPool()) { /*allocating new pool*/ /*make_shared uses a copy constructor so "new"*/
 }
 void SimulationController::StartSimulation() {
-        if (!ready_) {return;}
-        active_ = true;
-        for (auto i : sim_nodes_) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
-                std::cout << "Creating thread for Node: " << i.first->GetName() << std::endl;
-                std::shared_ptr<std::thread> th(new std::thread([&, i]() /*was make_shared*/
-                {       /*Lambda*/
-                        i.first->Start();
-                        std::cout << "Started" << std::endl;
-                }));
-                th->detach();
-                threads_.push_back(th);
-                //i.first->Start();
-                
-        }
-        std::cout << "FOR loop ends SimController" << std::endl; //TEST
-       /* while (active_) {  //new 3 //NO NEED
-                std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-                std::cout << "SimulationStart running" << std::endl;
-        }*/
+       
 }
                                 /*Enum nodes and name*/ /*without connections for testing*/
 bool SimulationController::LoadCheckConfiguration(std::list<std::pair<nodes_, std::string>> map_nodes) { /*will receive file later with locations and so on, now simple for multithreadinfg tests*/
@@ -63,12 +44,6 @@ bool SimulationController::BuildNetwork(std::string test) { /*Just FOR TEST 15 c
         return true;
 }
 
-void SimulationController::StopRouters() {
-        for (auto i : sim_nodes_) {
-                i.first->Stop();
-        }
-        active_ = false; //new3
-}
 
 bool SimulationController::GetStatus() {
         return active_;
