@@ -8,7 +8,7 @@ public:
         bool RecievePacket();
         bool ReceivePacket(std::shared_ptr<Packet>);
         bool SendPacket(uint32_t, std::shared_ptr<Packet>);
-        bool RequestConnection(uint32_t, channels_, unsigned); /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        bool RequestConnection(uint32_t, channels_, unsigned, double, double); /*Here the connection initiator should specify recieve/transmit queues of channel*/
         bool ApproveConnection(std::shared_ptr<Channel>, queue);
         bool GeneratePacket();
         bool RequestAddressesFromDhcp();

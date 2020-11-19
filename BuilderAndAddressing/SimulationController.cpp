@@ -1,5 +1,6 @@
 #include "../Headers/SimulationController.hpp"
 #include <iostream>
+#include <sstream>
 /*MULTITHREADING!!!*/
 SimulationController::SimulationController() : uploaded_(false), ready_(false), active_(false), 
         pool_(new AddressPool()) { /*allocating new pool*/ /*make_shared uses a copy constructor so "new"*/
@@ -8,8 +9,60 @@ void SimulationController::StartSimulation() {
        
 }
                                 /*Enum nodes and name*/ /*without connections for testing*/
-bool SimulationController::LoadCheckConfiguration(std::list<std::pair<nodes_, std::string>> map_nodes) { /*will receive file later with locations and so on, now simple for multithreadinfg tests*/
-        return false; /*disable using*/
+bool SimulationController::LoadCheckConfiguration(std::fstream config) {
+        std::string tmpstr;
+        unsigned i = 0;
+
+        parsed_nodes_.clear();
+        parsed_connections_.clear();
+        events_map_.clear();
+
+        /*Parsing Nodes*/
+        while(std::getline(config, tmpstr)) {
+                if (tmpstr == "END_OF_NODES") {break;}
+                std::istringstream tmpstream(tmpstr);
+                std::shared_ptr<NodeConfig> newnode(new NodeConfig);
+                tmpstream >> newnode->name_ >> newnode->address_ 
+                        >> newnode->location_.first >> newnode->location_.second
+                        >> newnode->type_;
+                newnode->id_ = i;
+                parsed_nodes_.push_back(newnode);
+                ++i;
+        }
+        /*Parsing Connections*/
+        while (std::getline(config, tmpstr)) {
+                if (tmpstr == "END_OF_CONNECTIONS") {break;}
+                std::istringstream tmpstream(tmpstr);
+                std::shared_ptr<Connections> newconnection(new Connections);
+                tmpstream >> newconnection->initiator_ >> newconnection->target_
+                        >> newconnection->channel_ >> newconnection->bandwidth_
+                        >> newconnection->length_;
+                parsed_connections_.push_back(newconnection);
+        }
+        /*Parsing Events*/
+        while (std::getline(config, tmpstr)) {
+                if (tmpstr == "END_OF_EVENTS") {break;}
+                std::istringstream tmpstream(tmpstr);
+                std::shared_ptr<Event> newevent(new Event);
+
+                tmpstream >> i >> newevent->sender_address_ >> newevent->target_address_
+                                >> newevent->size_;
+                
+                /*Check if there is already event with this timing*/
+                std::map<unsigned, std::set<std::shared_ptr<Event>>>::iterator it;
+                it = events_map_.find(i);
+                /*If there is no yet such timing, creating new map entry*/
+                if (it == events_map_.end()) {
+                        std::set<std::shared_ptr<Event>> newset;
+                        newset.insert(newevent);
+                        events_map_.insert(std::make_pair(i, newset));
+                /*If it is, adding new event to set*/
+                } else {
+                        it->second.insert(newevent);
+                }
+        }
+        
+        return true;
 }
 
 bool SimulationController::BuildNetwork() {
@@ -32,7 +85,7 @@ bool SimulationController::BuildNetwork(std::string test) { /*Just FOR TEST 15 c
                 std::cout << "Creating Node " << (i + 1) << std::endl; /*DELETE*/
                 std::string name = "Client " + std::to_string(i); /*DELETE*/
                 std::shared_ptr<Node> tmp = Creator::CreateNode(client, name, i, std::make_pair(15,52), pool_);
-                if (tmp->RequestConnection((uint32_t)321, twisted_pair, (unsigned)2000)) {
+                if (tmp->RequestConnection((uint32_t)321, twisted_pair, (unsigned)2000, 0.65, 75.)) {
                         std::cout << tmp->GetName() << " connected to " << tempNode->GetName() << std::endl; /*DELETE*/
                 };
                 pool_->AddNode(std::make_pair(tmp, i));

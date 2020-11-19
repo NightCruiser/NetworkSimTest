@@ -8,17 +8,20 @@
  /*MULTITHREADING!!!*/
 class TwistedPair : public Wired {
 public:
-        TwistedPair(unsigned);
+        TwistedPair(unsigned, double, double);
         bool PushPacketToQueue(std::shared_ptr<Packet>, queue);
         bool Status_queue(queue);
         std::shared_ptr<Packet> GetPacketFromQueue(queue);
         void SetDevice(std::shared_ptr<Node>, queue);
         void DecreaseLoad(queue, unsigned);
+        double GetPropagationDelay();
 private:
-        std::mutex ch_mtx_;
         unsigned bandwidth_;
-        unsigned load_q1_;
-        unsigned load_q2_;
+        unsigned bandwidth_q1_;
+        unsigned bandwidth_q2_;
+        double velocity_factor_;
+        double length_;
+        std::mutex ch_mtx_;
         std::queue<std::shared_ptr<Packet>> packets_q1_;
         std::queue<std::shared_ptr<Packet>> packets_q2_;
         std::shared_ptr<Node> device_one_;

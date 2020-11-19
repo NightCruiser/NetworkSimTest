@@ -19,14 +19,14 @@ bool Client::GetStatus() {
 bool Client::SendPacket(uint32_t, std::shared_ptr<Packet>) {
         return false; /*LATER*/
 }
-bool Client::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth) { 
+bool Client::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth, double vf, double length) { 
         /*Here the connection initiator should specify recieve/transmit queues of channel*/
         std::cout << "RequestConnectionCalled" << std::endl; /*DELETE*/
         if (target_address == address_ || interface_.first) {return false;} /*checking for connection to itself and already connected*/
         Channel *tmpChannel;
         switch (channel) {
         case twisted_pair:
-                tmpChannel = new TwistedPair(bandwidth);
+                tmpChannel = new TwistedPair(bandwidth, vf, length);
                 break;
         default:
                 return false;

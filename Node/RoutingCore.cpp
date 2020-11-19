@@ -31,13 +31,13 @@ bool RoutingCore::SendPacket(uint32_t, std::shared_ptr<Packet>) {
 } /*LATER*/
 
 /*Need REFACTOR*/
-bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth) { 
+bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, unsigned bandwidth, double vf, double length) { 
         /*Here the connection initiator should specify recieve/transmit queues of channel*/
         if (target_address == address_) {return false;} /*checking for connection to itself*/
         Channel *tmpChannelPtr;
         switch (channel) {
         case twisted_pair:
-                tmpChannelPtr = new TwistedPair(bandwidth); /*was make_shared*/
+                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
                 break;
         default:
                 return false;

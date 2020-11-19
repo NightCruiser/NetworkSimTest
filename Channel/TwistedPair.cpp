@@ -1,7 +1,8 @@
 #include "../Headers/TwistedPair.hpp"
 #include <iostream>
 /*MULTITHREADING!!!*/
-TwistedPair::TwistedPair(unsigned bandwidth) : bandwidth_(bandwidth * 2), load_q1_(0), load_q2_(0) { /*x2 for full duplex*/
+TwistedPair::TwistedPair(unsigned bandwidth, double vf, double length) 
+        : bandwidth_(bandwidth), bandwidth_q1_(bandwidth), bandwidth_q2_(bandwidth), velocity_factor_(vf), length_(length) {
         threads_.clear();
 }
 
@@ -11,6 +12,10 @@ void TwistedPair::DecreaseLoad(queue q, unsigned size) {
 bool TwistedPair::PushPacketToQueue(std::shared_ptr<Packet> packet, queue q) {
         
         return false;
+}
+
+double TwistedPair::GetPropagationDelay() {
+        return length_ / (SOL * velocity_factor_);
 }
 bool TwistedPair::Status_queue(queue q) {
         /*hard to read sequence, ternary operators check if there any packet in given queue*/

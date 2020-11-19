@@ -56,7 +56,9 @@
 			"ratio": "cpp",
 			"mutex": "cpp",
 			"thread": "cpp",
-			"iostream": "cpp"
+			"iostream": "cpp",
+			"map": "cpp",
+			"set": "cpp"
 		},
 		"editor.tabSize": 8
 	}
