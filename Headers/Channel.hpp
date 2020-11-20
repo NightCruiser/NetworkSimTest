@@ -15,5 +15,6 @@ public:
         virtual std::shared_ptr<Packet> GetPacketFromQueue(queue) = 0;
         virtual void SetDevice(std::shared_ptr<Node>, queue) = 0;
         virtual double GetPropagationDelay() = 0;
+        virtual double GetBandwidthDelay() = 0;
 };
 #endif //CHANNEL_HPP

@@ -1,8 +1,8 @@
 #include "../Headers/Client.hpp"
 #include <iostream> /*DELETE*/
 /*MULTITHREADING*/
-Client::Client(std::string name, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
-        : name_(name), mac_(mac), location_(location), pool_(pool) {}
+Client::Client(unsigned id, std::string name, uint32_t address, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
+        : id_(id), name_(name), address_(address), location_(location), pool_(pool) {}
 
 bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
         received_packets_.push_back(packet);
@@ -31,10 +31,34 @@ bool Client::RequestConnection(uint32_t target_address, channels_ channel, unsig
         default:
                 return false;
         }
-        std::shared_ptr<Channel> ch(tmpChannel); /*putting pointer to shared ptr inctance*/
+        std::shared_ptr<Channel> ch(tmpChannel); /*putting pointer to shared ptr instance*/
         std::shared_ptr<Node> target = pool_->GetNodeByAddress(target_address);
         /*initiator will always set it's transmission queue as first*/
         std::cout << "Requestng ApproveConnection" << std::endl; /*DELETE*/
+        if (target->ApproveConnection(ch, first)) {
+                 /*initiator will listen the second queue*/
+                interface_ = std::make_pair(ch, second);
+                ch->SetDevice(std::shared_ptr<Node>(this), first); /*was make_shared*/
+                gateway_ = target->GetAddress();
+                return true;
+        }
+       return false;
+}
+
+bool Client::RequestConnection(std::shared_ptr<Node> target, channels_ channel, unsigned bandwidth, double vf, double length) { 
+        /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        if (target.get() == this) {return false;} /*checking for connection to itself*/
+        Channel *tmpChannelPtr; /*will become shared, no need to delete*/
+        /*creating channel*/
+        switch (channel) {
+        case twisted_pair:
+                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
+                break;
+        default:
+                return false;
+        }
+        std::shared_ptr<Channel> ch(tmpChannelPtr); /*was make_shared*/
+        /*initiator will always set it's transmission queue as first*/
         if (target->ApproveConnection(ch, first)) {
                  /*initiator will listen the second queue*/
                 interface_ = std::make_pair(ch, second);
@@ -83,3 +107,13 @@ uint32_t Client::GetGateweay() {
 uint32_t Client::GetMac() {
         return mac_;
 }   
+
+unsigned Client::GetId() {
+        return id_;
+}
+
+/*Propagation delay + bandwidthdelay(for mtu 1500bytes packet)*/
+double Client::GetChannelWeight() {
+        return interface_.first->GetPropagationDelay() + interface_.first->GetBandwidthDelay();
+
+}

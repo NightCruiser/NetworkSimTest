@@ -19,7 +19,8 @@ public:
         virtual ~Node() {}
         virtual bool ReceivePacket(std::shared_ptr<Packet>) = 0;
         virtual bool SendPacket(uint32_t, std::shared_ptr<Packet>) = 0;
-        virtual bool RequestConnection(uint32_t, channels_, unsigned, double, double) = 0; /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        virtual bool RequestConnection(uint32_t, channels_, unsigned, double, double) = 0; /*delete later?*/
+        virtual bool RequestConnection(std::shared_ptr<Node>, channels_, unsigned, double, double) = 0; /*Here the connection initiator should specify recieve/transmit queues of channel*/
         virtual bool ApproveConnection(std::shared_ptr<Channel>, queue) = 0;
         virtual bool GeneratePacket() = 0;
         virtual bool RequestAddressesFromDhcp() = 0;
@@ -30,7 +31,9 @@ public:
         virtual std::string GetName() = 0;
         virtual uint32_t GetGateweay() = 0;
         virtual uint32_t GetMac() = 0;
-        virtual bool GetStatus() = 0;        
+        virtual bool GetStatus() = 0;
+        virtual unsigned GetId() = 0;
+        virtual double GetChannelWeight() = 0;     
 };
 
 #endif //NODE_HPP*/

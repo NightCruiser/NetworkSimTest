@@ -2,7 +2,7 @@
 #include <iostream>
 /*MULTITHREADING!!!*/
 TwistedPair::TwistedPair(unsigned bandwidth, double vf, double length) 
-        : bandwidth_(bandwidth), bandwidth_q1_(bandwidth), bandwidth_q2_(bandwidth), velocity_factor_(vf), length_(length) {
+        : bandwidth_(bandwidth), bandwidth_q1_(bandwidth), bandwidth_q2_(bandwidth), velocity_factor_(vf), length_(length), mtu_(0.0015) {
         threads_.clear();
 }
 
@@ -16,6 +16,10 @@ bool TwistedPair::PushPacketToQueue(std::shared_ptr<Packet> packet, queue q) {
 
 double TwistedPair::GetPropagationDelay() {
         return length_ / (SOL * velocity_factor_);
+}
+
+double TwistedPair::GetBandwidthDelay() {
+        return mtu_ / bandwidth_;
 }
 bool TwistedPair::Status_queue(queue q) {
         /*hard to read sequence, ternary operators check if there any packet in given queue*/

@@ -3,7 +3,8 @@
 #include <iostream> /*delete after tests*/
 RoutingCore::RoutingCore() {}
 /*ADD Additional constructor for other functionalities*/
-RoutingCore::RoutingCore(std::string name, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) : name_(name), mac_(mac), location_(location), pool_(pool)  {}
+RoutingCore::RoutingCore(unsigned id, std::string name, uint32_t address, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
+        : id_(id), name_(name), address_(address), location_(location), pool_(pool)  {}
 
 RoutingCore::~RoutingCore() {
 }
@@ -43,6 +44,30 @@ bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, 
                 return false;
         }
         std::shared_ptr<Node> target = pool_->GetNodeByAddress(target_address);
+        std::shared_ptr<Channel> ch(tmpChannelPtr); /*was make_shared*/
+        /*initiator will always set it's transmission queue as first*/
+        if (target->ApproveConnection(ch, first)) {
+                 /*initiator will listen the second queue*/
+                std::pair<std::shared_ptr<Channel>, queue> interface = std::make_pair(ch, second);
+                ch->SetDevice(std::shared_ptr<Node>(this), first); /*was make_shared*/
+                interfaces_.push_back(interface);
+                gateway_ = target->GetAddress();
+                return true;
+        }
+       return false;
+}
+bool RoutingCore::RequestConnection(std::shared_ptr<Node> target, channels_ channel, unsigned bandwidth, double vf, double length) { 
+        /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        if (target.get() == this) {return false;} /*checking for connection to itself*/
+        Channel *tmpChannelPtr; /*will become shared, no need to delete*/
+        /*creating channel*/
+        switch (channel) {
+        case twisted_pair:
+                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
+                break;
+        default:
+                return false;
+        }
         std::shared_ptr<Channel> ch(tmpChannelPtr); /*was make_shared*/
         /*initiator will always set it's transmission queue as first*/
         if (target->ApproveConnection(ch, first)) {
@@ -99,4 +124,11 @@ uint32_t RoutingCore::GetGateweay() {
 }
 uint32_t RoutingCore::GetMac() {
         return mac_;
+}
+unsigned RoutingCore::GetId() {
+        return id_;
+}
+
+double RoutingCore::GetChannelWeight() {
+        return 0.;
 }

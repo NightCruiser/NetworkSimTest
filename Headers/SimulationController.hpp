@@ -4,19 +4,19 @@
 #include <map>
 #include <set>
 #include "Creator.hpp"
-
+/*Structure to store nodes for building network*/
 struct NodeConfig {
         std::string name_;
         uint32_t address_;
         std::pair<double, double> location_;
-        std::string type_;
+        nodes_ type_;
         unsigned id_;
 };
-
+/*Structure to store connections for building network*/
 struct Connections {
         uint32_t initiator_;
         uint32_t target_;
-        std::string channel_;
+        channels_ channel_;
         unsigned bandwidth_;
         unsigned length_;
 };
@@ -34,7 +34,7 @@ public:
         ~SimulationController() {}
         void StartSimulation();
                 /*Check will be implemented*/     /*Enum nodes and name*/ /*without connections for testing*/
-        bool LoadCheckConfiguration(std::fstream);
+        bool LoadCheckConfiguration(std::fstream&);
         /*this will connect */
         bool LoadCheckConfiguration(std::string); /*JUST FOR TESTING DELETE*/
         bool BuildNetwork(std::string); /*JUST FOR TESTING DELETE*/
@@ -52,7 +52,7 @@ private:
         std::map<unsigned, std::set<std::shared_ptr<Event>>> events_map_; /*event timings as a key*/
         std::shared_ptr<AddressPool> pool_;
         std::list<std::pair<std::shared_ptr<Node>, nodes_>> sim_nodes_;
-        std::list<std::pair<nodes_, std::string>> map_nodes_;/*TEST*/
+        std::list<std::shared_ptr<Node>> created_nodes_;
         std::list<std::shared_ptr<std::thread>> threads_;
 };
 #endif //SIMULATIONCONTROLLER_HPP
