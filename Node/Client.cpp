@@ -26,7 +26,7 @@ bool Client::RequestConnection(uint32_t target_address, channels_ channel, unsig
         Channel *tmpChannel;
         switch (channel) {
         case twisted_pair:
-                tmpChannel = new TwistedPair(bandwidth, vf, length);
+                tmpChannel = new Wired(bandwidth, vf, length);
                 break;
         default:
                 return false;
@@ -52,7 +52,7 @@ bool Client::RequestConnection(std::shared_ptr<Node> target, channels_ channel, 
         /*creating channel*/
         switch (channel) {
         case twisted_pair:
-                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
+                tmpChannelPtr = new Wired(bandwidth, vf, length); /*was make_shared*/
                 break;
         default:
                 return false;

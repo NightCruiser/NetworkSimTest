@@ -38,7 +38,7 @@ bool RoutingCore::RequestConnection(uint32_t target_address, channels_ channel, 
         Channel *tmpChannelPtr;
         switch (channel) {
         case twisted_pair:
-                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
+                tmpChannelPtr = new Wired(bandwidth, vf, length); /*was make_shared*/
                 break;
         default:
                 return false;
@@ -63,7 +63,7 @@ bool RoutingCore::RequestConnection(std::shared_ptr<Node> target, channels_ chan
         /*creating channel*/
         switch (channel) {
         case twisted_pair:
-                tmpChannelPtr = new TwistedPair(bandwidth, vf, length); /*was make_shared*/
+                tmpChannelPtr = new Wired(bandwidth, vf, length); /*was make_shared*/
                 break;
         default:
                 return false;

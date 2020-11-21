@@ -6,7 +6,7 @@
 #include <memory>
 #include <cstdint>
 #include "Channel.hpp"
-#include "TwistedPair.hpp"
+#include "Wired.hpp"
 #include "AddressPool.hpp"
 
 enum channels_ {twisted_pair = 1, optical, wifi, m_4g, m_5g};
