@@ -11,11 +11,12 @@ struct NodeConfig {
         std::pair<double, double> location_;
         nodes_ type_;
         unsigned id_;
+        uint32_t mac_;
 };
 /*Structure to store connections for building network*/
 struct Connections {
-        uint32_t initiator_;
-        uint32_t target_;
+        uint32_t initiator_mac_;
+        uint32_t target_mac_;
         channels_ channel_;
         unsigned bandwidth_;
         unsigned length_;

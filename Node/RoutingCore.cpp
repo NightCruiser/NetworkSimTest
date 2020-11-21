@@ -3,8 +3,8 @@
 #include <iostream> /*delete after tests*/
 RoutingCore::RoutingCore() {}
 /*ADD Additional constructor for other functionalities*/
-RoutingCore::RoutingCore(unsigned id, std::string name, uint32_t address, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
-        : id_(id), name_(name), address_(address), location_(location), pool_(pool)  {}
+RoutingCore::RoutingCore(unsigned id, std::string name, uint32_t address, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
+        : id_(id), name_(name), address_(address), mac_(mac), location_(location), pool_(pool)  {}
 
 RoutingCore::~RoutingCore() {
 }
@@ -80,6 +80,8 @@ bool RoutingCore::RequestConnection(std::shared_ptr<Node> target, channels_ chan
         }
        return false;
 }
+
+
 
 bool RoutingCore::ApproveConnection(std::shared_ptr<Channel> ch, queue q) {
         std::pair<std::shared_ptr<Channel>, queue> interface = std::make_pair(ch,q);

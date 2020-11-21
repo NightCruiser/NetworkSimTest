@@ -3,6 +3,8 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <map>
+#include <set>
 #include "Functionalities.hpp"
 
 class AddressPool; //forward declaration new
@@ -11,7 +13,7 @@ public:
         RoutingCore(const RoutingCore&) = delete;
         RoutingCore();
         ~RoutingCore();
-        RoutingCore(unsigned, std::string, uint32_t, std::pair<double, double>, std::shared_ptr<AddressPool>);
+        RoutingCore(unsigned, std::string, uint32_t, uint32_t, std::pair<double, double>, std::shared_ptr<AddressPool>);
         bool ReceivePacket(std::shared_ptr<Packet>);
         bool SendPacket(uint32_t, std::shared_ptr<Packet>);
         bool RequestConnection(uint32_t, channels_, unsigned, double, double); /*delete later?*/
@@ -33,16 +35,18 @@ private:
         unsigned id_;
         std::mutex mtx_;
         std::string name_;
-        uint32_t mac_;
         uint32_t address_;
+        uint32_t mac_;
         std::pair<double, double> location_;
         std::shared_ptr<AddressPool> pool_;
         bool update_;
         uint32_t gateway_;
         std::list<std::shared_ptr<Packet>> received_packets_;
+        std::map<unsigned, std::pair<std::shared_ptr<Channel>, queue>> interfaces2_;
         std::list<std::pair<std::shared_ptr<Channel>, queue>> interfaces_; /*First - pointer to a channel Second - Input queue*/
         std::list<std::shared_ptr<std::thread>> threads_;
         std::shared_ptr<Node> node_;
+        std::map<unsigned, std::set<uint32_t>> routing_table_;
 };
 
 #endif //ROUTINGCORE_HPP

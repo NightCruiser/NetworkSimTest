@@ -1,8 +1,8 @@
 #include "../Headers/Client.hpp"
 #include <iostream> /*DELETE*/
 /*MULTITHREADING*/
-Client::Client(unsigned id, std::string name, uint32_t address, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
-        : id_(id), name_(name), address_(address), location_(location), pool_(pool) {}
+Client::Client(unsigned id, std::string name, uint32_t address, uint32_t mac, std::pair<double, double> location, std::shared_ptr<AddressPool> pool) 
+        : id_(id), name_(name), address_(address), mac_(mac), location_(location), pool_(pool) {}
 
 bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
         received_packets_.push_back(packet);
