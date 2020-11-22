@@ -108,7 +108,7 @@ bool SimulationController::BuildNetwork() {
                         it = network_graph_.find(tmpnode1->GetId());
                         it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight()));
                         it = network_graph_.find(tmpnode2->GetId());
-                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode2->GetChannelWeight()));
+                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode1->GetChannelWeight()));
                 }
                 
         }
