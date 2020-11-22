@@ -7,10 +7,9 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<std::thread> sim_thread; //new3
 	std::fstream config("testconf.txt");
 	do {
-	std::cout << "1 - Load Fake config\n"
+	std::cout << "1 - Load config\n"
 		<< "2 - Build Fake Network\n"
 		<< "3 - Start Simulation\n"
-		<< "4 - Stop Routers\n"
 		<< "0 - Exit\n" << "Choice >>";
 	std::cin >> choice;
 	switch (choice){
@@ -22,8 +21,6 @@ int main(int argc, char* argv[]) {
 		break;
 	case 3 :
 		controller.StartSimulation();
-		break;
-	case 4 : 
 		break;
 	case 0 :
 		std::cout << "Thanks For Watching!" << std::endl;
