@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 		controller.LoadCheckConfiguration(config); 
 		break;
 	case 2 :
-		controller.BuildNetwork("test");
+		controller.BuildNetwork();
 		break;
 	case 3 :
 		controller.StartSimulation();

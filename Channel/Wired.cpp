@@ -2,13 +2,10 @@
 #include <iostream>
 /*MULTITHREADING!!!*/
 Wired::Wired(unsigned bandwidth, double vf, double length) 
-        : bandwidth_(bandwidth), bandwidth_q1_(bandwidth), bandwidth_q2_(bandwidth), velocity_factor_(vf), length_(length), mtu_(0.0015) {
-        threads_.clear();
-}
+        : bandwidth_(bandwidth), velocity_factor_(vf), length_(length), mtu_(0.012) {
 
-void Wired::DecreaseLoad(queue q, unsigned size) { 
-        
-}
+        }
+
 bool Wired::PushPacketToQueue(std::shared_ptr<Packet> packet, queue q) {
         
         return false;
@@ -19,7 +16,8 @@ double Wired::GetPropagationDelay() {
 }
 
 double Wired::GetBandwidthDelay() {
-        return mtu_ / bandwidth_;
+        /*mtu in megabits | bandwidth in megabits*/
+        return mtu_ / (bandwidth_ * 0.001) /*converting to milliseconds*/;
 }
 bool Wired::Status_queue(queue q) {
         /*hard to read sequence, ternary operators check if there any packet in given queue*/
@@ -33,7 +31,13 @@ std::shared_ptr<Packet> Wired::GetPacketFromQueue(queue q) {
 }
 
 void Wired::SetDevice(std::shared_ptr<Node> device, queue dev_number) {
-
         dev_number == first ? device_one_ = device : device_two_ = device;
         
+}
+
+std::pair<unsigned, unsigned> Wired::GetDevicesId() {
+        std::shared_ptr<Node> tmp1 = device_one_;
+        std::shared_ptr<Node> tmp2 = device_two_;
+        
+        return std::make_pair(1,2); /*FAKE*/
 }

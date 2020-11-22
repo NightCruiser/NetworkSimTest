@@ -41,7 +41,9 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                         >> tmpstr >> newconnection->bandwidth_
                         >> newconnection->length_;
                 /*will refactor Channels, but for now only 1 twisted pait exists*/
-                tmpstr == "TwistedPair" ? newconnection->channel_ = twisted_pair : newconnection->channel_ = twisted_pair;
+                tmpstr == "cat5" ? newconnection->velocity_ = 0.64 : tmpstr == "cat6" ? newconnection->velocity_ = 0.65
+                        : tmpstr == "optical" ? newconnection->velocity_ = 0.67 : tmpstr == "cat7" ? newconnection->velocity_ = 0.75
+                        : tmpstr == "cat3" ? newconnection->velocity_ = 0.585 : newconnection->velocity_ = 0.65; /*default*/
                 parsed_connections_.push_back(newconnection);
         }
         std::cout << "Connections loaded" << std::endl;/*DELETE*/
@@ -68,7 +70,7 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                 }
         }
         std::cout << "Events loaded" << std::endl;/*DELETE*/
-
+        
         uploaded_ = true;
         return true;
 }
@@ -92,48 +94,32 @@ bool SimulationController::BuildNetwork() {
                 /*registering new node in address pool*/
                 pool_->AddNode(std::make_pair(new_node, new_node->GetMac()));
         }
+
         std::cout << "Connecting nodes" << std::endl;
 
         for (auto i : parsed_connections_) {
-                std::shared_ptr<Node> tmpnode1 = pool_->GetNodeByAddress(i->initiator_mac_);
-                std::shared_ptr<Node> tmpnode2 = pool_->GetNodeByAddress(i->target_mac_);
-                /*0.65 temporary this is velocity factor, will work in other way*/
-                if (tmpnode1->RequestConnection(tmpnode2, i->channel_, i->bandwidth_, 0.65, i->length_)) {
+                std::shared_ptr<Node> tmpnode1 = pool_->GetNodeByMac(i->initiator_mac_);
+                std::shared_ptr<Node> tmpnode2 = pool_->GetNodeByMac(i->target_mac_);
+               /* std::shared_ptr<Node> tmpnode2 = pool_->GetNodeByMac(i->target_mac_);*/
+                if (tmpnode1->RequestConnection(tmpnode2, i)) {
                         std::cout << tmpnode1->GetName() << " connected to " << tmpnode2->GetName() << std::endl; /*DELETE*/
+                        std::map<unsigned, std::set<std::pair<unsigned, double>>>::iterator it;
+                        /*Filling the network graph*/
+                        it = network_graph_.find(tmpnode1->GetId());
+                        it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight()));
+                        it = network_graph_.find(tmpnode2->GetId());
+                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode2->GetChannelWeight()));
                 }
-                std::map<unsigned, std::set<std::shared_ptr<Event>>>::iterator it;
-                it = events_map_.find(tmpnode1->GetId());
-               /* it->second.insert(std::make_pair(tmpnode2->GetId(), ))*/
-
-        }
-        return false; /*disable using*/
-}
-
-bool SimulationController::LoadCheckConfiguration(std::string test) {
-        uploaded_ = true;
-        return true;
-}
-
-bool SimulationController::BuildNetwork(std::string test) { /*Just FOR TEST 15 clients connected to 1 router*/
-        if (!uploaded_) {return false;}
-        std::shared_ptr<Node> tempNode = Creator::CreateNode(router, (unsigned)199455777999, "firstRouter", 455, 755, std::make_pair(15,52), pool_);
-        /*tempNode->SetAddress((uint32_t)321);*/
-        pool_->AddNode(std::make_pair(tempNode, (uint32_t)321)); /*adding to pool*/
-        /*CreateNode(nodes_ node, std::string name, uint32_t mac, std::pair<double,double> location, std::shared_ptr<AddressPool> pool)*/
-        
-        for (int i = 0; i < 50; i++) {
-                std::cout << "Creating Node " << (i + 1) << std::endl; /*DELETE*/
-                std::string name = "Client " + std::to_string(i); /*DELETE*/
-                std::shared_ptr<Node> tmp = Creator::CreateNode(client, i, name, i, i, std::make_pair(15,52), pool_);
-                if (tmp->RequestConnection((uint32_t)321, twisted_pair, (unsigned)2000, 0.65, 75.)) {
-                        std::cout << tmp->GetName() << " connected to " << tempNode->GetName() << std::endl; /*DELETE*/
-                };
-                pool_->AddNode(std::make_pair(tmp, i));
-                sim_nodes_.push_back(std::make_pair(tmp, client));
+                
         }
 
-        sim_nodes_.push_back(std::make_pair(tempNode, router));
-        ready_ = true;
+        std::cout << "Our Network : \nNode ID\tConnected To\tChannel's weight\n";
+        for (auto i : network_graph_) {
+                std::cout << i.first << "\t";
+                for (auto j : i.second) {
+                        std::cout << j.first << "\t" << j.second << "\n";
+                }
+        }
         return true;
 }
 

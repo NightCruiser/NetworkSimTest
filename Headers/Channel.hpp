@@ -3,7 +3,7 @@
 #include <queue>
 #include "Packet.hpp"
 
-static const int SOL = 299792458; /*Speed of light in vacuum meters/second*/
+static const double SOL = 299792.458; /*Speed of light in vacuum meters/millisecond*/
 
 typedef enum queues_ {first = 1, second = 2} queue; //new
 class Node; //forward new
@@ -16,5 +16,6 @@ public:
         virtual void SetDevice(std::shared_ptr<Node>, queue) = 0;
         virtual double GetPropagationDelay() = 0;
         virtual double GetBandwidthDelay() = 0;
+        virtual std::pair<unsigned, unsigned> GetDevicesId() = 0;
 };
 #endif //CHANNEL_HPP
