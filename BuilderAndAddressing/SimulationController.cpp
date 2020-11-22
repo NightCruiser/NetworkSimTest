@@ -1,7 +1,7 @@
 #include "../Headers/SimulationController.hpp"
 #include <iostream>
 #include <sstream>
-/*MULTITHREADING!!!*/
+
 SimulationController::SimulationController() : uploaded_(false), ready_(false), active_(false), 
         pool_(new AddressPool()) { /*allocating new pool*/ /*make_shared uses a copy constructor so "new"*/
 }
@@ -9,6 +9,9 @@ void SimulationController::StartSimulation() {
        
 }
                                 /*Enum nodes and name*/ /*without connections for testing*/
+
+
+        /*TEST PARSER VERY BAD!!! Implement normal with value checking and other stuff*/
 bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
         std::string tmpstr;
         unsigned i = 0;
@@ -40,7 +43,7 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                 tmpstream >> newconnection->initiator_mac_ >> newconnection->target_mac_
                         >> tmpstr >> newconnection->bandwidth_
                         >> newconnection->length_;
-                /*will refactor Channels, but for now only 1 twisted pait exists*/
+                
                 tmpstr == "cat5" ? newconnection->velocity_ = 0.64 : tmpstr == "cat6" ? newconnection->velocity_ = 0.65
                         : tmpstr == "optical" ? newconnection->velocity_ = 0.67 : tmpstr == "cat7" ? newconnection->velocity_ = 0.75
                         : tmpstr == "cat3" ? newconnection->velocity_ = 0.585 : newconnection->velocity_ = 0.65; /*default*/

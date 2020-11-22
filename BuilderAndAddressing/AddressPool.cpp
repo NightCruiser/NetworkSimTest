@@ -1,7 +1,7 @@
 #include "../Headers/AddressPool.hpp"
 #include <algorithm>
 #include <iostream> /*DELETE*/
-/*MULTITHREADING!!!*/
+
 AddressPool::AddressPool() {
         std::cout << "pool created" << std::endl; /*DELETE*/
 }

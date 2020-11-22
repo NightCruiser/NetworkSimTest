@@ -12,6 +12,7 @@ bool Client::ReceivePacket(std::shared_ptr<Packet> packet) {
 
 
 bool Client::SendPacket(uint32_t, std::shared_ptr<Packet>) {
+        
         return false; /*LATER*/
 }
 

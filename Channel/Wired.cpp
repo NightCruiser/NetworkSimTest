@@ -1,6 +1,6 @@
 #include "../Headers/Wired.hpp"
 #include <iostream>
-/*MULTITHREADING!!!*/
+
 Wired::Wired(unsigned bandwidth, double vf, double length) 
         : bandwidth_(bandwidth), velocity_factor_(vf), length_(length), mtu_(0.012) {
 
