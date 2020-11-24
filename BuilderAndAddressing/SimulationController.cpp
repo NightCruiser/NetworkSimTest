@@ -142,9 +142,17 @@ bool SimulationController::BuildNetwork() {
                 }
                 
         }
-        graph_.FindPathesForGivenNode_Djikstra(6); //new
+        std::cout << "Calculating routes for 1000+ nodes\n";
+        auto start = std::chrono::system_clock::now();
 
-        std::cout << "Our Network : \n";
+        for (auto i : created_nodes_) {
+                graph_.FindPathesForGivenNode_Djikstra(i->GetId());
+        }
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::cout << "Djikstra's calculation time is " << elapsed_seconds.count() << std::endl;
+
+        /*std::cout << "Our Network : \n";
         for (auto i : network_graph_) {
                 std::cout << "Node " << i.first << " Connected to ";
                 for (auto j : i.second) {
@@ -154,7 +162,7 @@ bool SimulationController::BuildNetwork() {
         }
 
         std::cout << "Our Pool : \n";
-        pool_->PrintPool();
+        pool_->PrintPool();*/
         return true;
 }
 

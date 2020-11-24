@@ -102,10 +102,4 @@ void NetworkGraph::FindPathesForGivenNode_Djikstra(unsigned vertex) {
                 cheapest_routes[min_vertex].second = true;
                 
         }
-        std::cout << "Cheapest Routes (Start Vertex has 0.0) " << vertex << std::endl;
-
-        for (auto i : cheapest_routes) {
-                std::cout << "Vertex " << i.first << " :: " << i.second.first << std::endl;
-        }
-
 }
