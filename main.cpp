@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	std::cin >> choice;
 	switch (choice){
 	case 1 :
-		config.open("testconf.txt", std::ios::in );
+		config.open("testaverageconf.txt", std::ios::in );
 		controller.LoadCheckConfiguration(config);
 		config.close(); 
 		break;

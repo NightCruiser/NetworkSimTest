@@ -1,0 +1,88 @@
+client1	192	30055	15	16	client
+client2	193	30056	16	17	client
+client3	194	30057	17	18	client
+client4	195	30058	18	19	client
+client5	196	30059	19	20	client
+client6	197	30060	20	21	client
+client7	198	30061	21	22	client
+client8	199	30062	22	23	client
+client9	200	30063	23	24	client
+client10 201	30064	24	25	client
+client11 202	30065	25	26	client
+client12 203	30066	26	27	client
+client13 204	30067	27	28	client
+client14 205	30068	28	29	client
+client15 206	30069	29	30	client
+client16 207	30070	30	31	client
+client17 208	30071	31	32	client
+client18 209	30072	32	33	client
+client19	210	30073	33	34	client
+client20	211	30074	34	35	client
+client21	212	30075	35	36	client
+client22	213	30076	36	37	client
+client23	214	30077	37	38	client
+client24	215	30078	38	39	client
+client25	216	30079	39	40	client
+client26	217	30080	40	41	client
+client27	218	30081	41	42	client
+client28	219	30082	42	43	client
+client29	220	30083	43	44	client
+client30	221	30084	44	45	client
+client31	222	30085	45	46	client
+client32	223	30086	46	47	client
+client33	224	30087	47	48	client
+client34	225	30088	48	49	client
+client35	226	30089	49	50	client
+router1	172	15	56	78	router
+router2	173	16	57	79	router
+router3	174	17	58	80	router
+router4	175	18	59	81	router
+router5	176	19	60	82	router
+router6	177	20	61	83	router
+router7	178	21	62	84	router
+END_OF_NODES
+30055	15	cat5	100	15
+30056	15	cat5	100	21
+30057	15	cat5	100	22
+30058	15	cat5	100	23
+30059	16	cat3	10	50
+30060	16	cat3	10	51
+30061	16	cat3	10	52
+30062	17	cat7	1000	45
+30063	17	cat7	1000	46
+30064	17	cat7	1000	47
+30065	17	cat7	1000	48
+30066	17	cat7	1000	49
+30067	18	optical	500	150
+30068	18	optical	500	151
+30069	18	optical	500	152
+30070	18	optical	500	153
+30071	18	optical	500	154
+30072	18	optical	500	155
+30073	18	optical	500	156
+30074	18	optical	500	157
+30075	18	optical	500	158
+30076	18	optical	500	159
+30077	19	cat6	35	5
+30078	19	cat6	35	6
+30079	19	cat6	35	7
+30080	19	cat6	35	8
+30081	19	cat6	35	9
+30082	20	cat7	250	17
+30083	20	cat7	250	18
+30084	20	cat7	250	19
+30085	20	cat7	250	20
+30086	21	optical	500	274
+30087	21	optical	500	275
+30088	21	optical	500	276
+30089	21	optical	500	277
+15	17	optical	1000	100
+15	18	optical	1000	450
+17	18	optical	1000	15000
+17	19	optical	1000	4789
+17	20	optical	1000	15
+21	17	optical	1000	1988
+END_OF_CONNECTIONS
+END_OF_EVENTS
+
+

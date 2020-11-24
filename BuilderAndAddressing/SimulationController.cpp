@@ -95,7 +95,7 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
 }
 
 bool SimulationController::BuildNetwork() {
-        std::pair<unsigned, std::set<std::pair<unsigned, double>>> tmppair; /*pair for graph*/
+        /*std::pair<unsigned, std::set<std::pair<unsigned, double>>> tmppair;*/ /*pair for graph*/
         std::shared_ptr<Node> new_node; /*temp for new nodes*/
 
         std::cout << "Building Network" << std::endl;
@@ -107,9 +107,10 @@ bool SimulationController::BuildNetwork() {
                 new_node = Creator::CreateNode(i->type_, i->id_, i->name_, i->address_, i->mac_, i->location_, pool_);
                 created_nodes_.push_back(new_node);
                 /*adding new node to graph, clearing set of edges*/
-                tmppair.second.clear();
-                tmppair.first = i->id_;
-                network_graph_.insert(tmppair);
+                /*tmppair.second.clear();*/
+                /*tmppair.first = i->id_;*/
+                /*network_graph_.insert(tmppair);*/
+                graph_.AddVertexWithoutWeight(i->id_);
                 /*registering new node in address pool*/
                 pool_->AddNode(std::make_pair(new_node, new_node->GetMac()));
         }
@@ -124,22 +125,24 @@ bool SimulationController::BuildNetwork() {
                         std::cout << tmpnode1->GetName() << " connected to " << tmpnode2->GetName() << std::endl; /*DELETE*/
 
                         /*iterator of network's graph*/
-                        std::map<unsigned, std::set<std::pair<unsigned, double>>>::iterator it;
+                        /*std::map<unsigned, std::set<std::pair<unsigned, double>>>::iterator it;*/
                         /*Filling the network graph*/
                         /*find the location of initiator in graph*/
-                        it = network_graph_.find(tmpnode1->GetId());
+                        /*it = network_graph_.find(tmpnode1->GetId());*/
                         /*Adding new connection with channel's weight for initiator node*/
                         /*inserting a new pair ID - Weight to initiator's connections list*/
                         /*tmpnode1->GetChannelWeight(tmpnode2->GetId()) - if the node is router we need an ID */
                         /*to find the correct channel*/
-                        it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight(tmpnode2->GetId())));
+                        /*it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight(tmpnode2->GetId())));*/
+                        graph_.AddEdgeWithWeight(tmpnode1->GetId(), tmpnode2->GetId(), tmpnode2->GetChannelWeight(tmpnode1->GetId()));
                         /*Doing the same for the target node*/
-                        it = network_graph_.find(tmpnode2->GetId());
-                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode2->GetChannelWeight(tmpnode1->GetId())));
+                        /*it = network_graph_.find(tmpnode2->GetId());*/
+                        /*it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode2->GetChannelWeight(tmpnode1->GetId())));*/
                         /*GetChannelWeight for routers doesnt work yet*/
                 }
                 
         }
+        graph_.FindPathesForGivenNode_Djikstra(6); //new
 
         std::cout << "Our Network : \n";
         for (auto i : network_graph_) {

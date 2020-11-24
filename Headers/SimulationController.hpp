@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include "Creator.hpp"
+#include "NetworkGraph.hpp"
 
 /**
  * The Controller class, that handles configuration files reading and checking,
@@ -32,5 +33,6 @@ private:
         std::map<unsigned, std::set<std::shared_ptr<Event>>> events_map_; /*event timings as a key*/
         std::shared_ptr<AddressPool> pool_;
         std::list<std::shared_ptr<Node>> created_nodes_;
+        NetworkGraph graph_;
 };
 #endif //SIMULATIONCONTROLLER_HPP
