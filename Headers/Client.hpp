@@ -2,20 +2,27 @@
 #define CLIENT_HPP
 #include <memory>
 #include "Node.hpp"
+
+/**
+ * Client class inherited from Nodes represents the simple host
+ * Host have only 1 interface (able to hold a single connection) and doesn't contain routing tables
+ * */
 class Client : public Node {
 public:
         Client(unsigned, std::string, uint32_t, uint32_t, std::pair<double, double>, std::shared_ptr<AddressPool>);
+        ~Client();
         bool ReceivePacket(std::shared_ptr<Packet>);
         bool SendPacket(uint32_t, std::shared_ptr<Packet>);
-        bool RequestConnection(std::shared_ptr<Node>, std::shared_ptr<Connections>); /*Here the connection initiator should specify recieve/transmit queues of channel*/
-        bool ApproveConnection(std::shared_ptr<Channel>, queue);
+        bool RequestConnection(std::shared_ptr<Node>&, std::shared_ptr<Connections>&); /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        bool ApproveConnection(std::shared_ptr<Channel>&, queue);
         bool GeneratePacket();
         bool SetAddress(uint32_t);
         uint32_t GetAddress();
         std::string GetName();
         uint32_t GetMac();
         unsigned GetId();   
-        double GetChannelWeight();
+        double GetChannelWeight(unsigned); /*unsigned - ID of node, that requests*/
+        void Disconnect();
 private:
         unsigned id_;
         std::string name_;

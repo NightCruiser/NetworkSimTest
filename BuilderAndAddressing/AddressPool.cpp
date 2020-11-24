@@ -20,3 +20,16 @@ void AddressPool::AddNode(std::pair<std::shared_ptr<Node>, uint32_t> node) {
         /*Implement some check later*/
         nodes_.push_back(node);
 }
+
+void AddressPool::ClearPool() {
+        nodes_.clear();
+        
+}
+
+void AddressPool::PrintPool() {
+
+        for (auto i : nodes_) {
+                std::cout << "Node " << i.first->GetId() << " with a mac " << i.second << std::endl;
+        }
+        
+}

@@ -2,6 +2,9 @@
 #define PACKET_HPP
 #include <cstdint>
 #include <string>
+/**
+ * Packet class represents a simple packet
+ * */
 class Packet {
 public:
         virtual ~Packet() {}
@@ -9,8 +12,5 @@ public:
         virtual uint32_t GetDestinationMac() = 0;
         virtual uint32_t GetSendersMac() = 0;
         virtual unsigned GetSize() = 0;
-        virtual std::string GetMessage() = 0;
-        virtual bool Handshake(uint32_t) = 0;
-        virtual bool GetDeliveryStatus() = 0;
 };
 #endif //PACKET_HPP

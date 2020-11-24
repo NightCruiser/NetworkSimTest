@@ -9,7 +9,13 @@
 #include "Wired.hpp"
 #include "AddressPool.hpp"
 
-enum channels_ {cat3, cat5, cat6, cat7, optical};
+/**
+ * Node class is an interface for all the nodes
+ * In our case RouterCore(represents switch) and Client(represents Host)
+ * Contains the definitions of structures that are used for parsing/building
+ * */
+
+enum channels_ {cat3, cat5, cat6, cat7, optical}; /*USELESS NOW*/
 enum nodes_ {router = 1, client};
 
 class Channel; //new Forward declaration avoiding circular dependency
@@ -44,15 +50,16 @@ public:
         virtual ~Node() {}
         virtual bool ReceivePacket(std::shared_ptr<Packet>) = 0;
         virtual bool SendPacket(uint32_t, std::shared_ptr<Packet>) = 0;
-        virtual bool RequestConnection(std::shared_ptr<Node>, std::shared_ptr<Connections>) = 0; /*Here the connection initiator should specify recieve/transmit queues of channel*/
-        virtual bool ApproveConnection(std::shared_ptr<Channel>, queue) = 0;
+        virtual bool RequestConnection(std::shared_ptr<Node>&, std::shared_ptr<Connections>&) = 0; /*Here the connection initiator should specify recieve/transmit queues of channel*/
+        virtual bool ApproveConnection(std::shared_ptr<Channel>&, queue) = 0;
         virtual bool GeneratePacket() = 0;
         virtual bool SetAddress(uint32_t) = 0;
         virtual uint32_t GetAddress() = 0;
         virtual std::string GetName() = 0;
         virtual uint32_t GetMac() = 0;
         virtual unsigned GetId() = 0;
-        virtual double GetChannelWeight() = 0;     
+        virtual double GetChannelWeight(unsigned) = 0;  /*unsigned - ID of node, that requests*/
+        virtual void Disconnect() = 0;   
 };
 
 #endif //NODE_HPP*/

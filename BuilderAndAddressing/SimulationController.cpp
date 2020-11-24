@@ -12,13 +12,23 @@ void SimulationController::StartSimulation() {
 
 
         /*TEST PARSER VERY BAD!!! Implement normal with value checking and other stuff*/
+        /*In normal implementation parses the nodes into a list of structures
+        the connections into a list of connections
+        Checks that data is valid
+        No need for events 
+        */
 bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
         std::string tmpstr;
         unsigned i = 0;
 
+        /*Clearing and deleting created objects (they a shared pointers) when new config is loaded*/
         parsed_nodes_.clear();
         parsed_connections_.clear();
         events_map_.clear();
+        network_graph_.clear();
+        created_nodes_.clear();
+        pool_->ClearPool();
+
 
         /*Parsing Nodes*/
         while(std::getline(config, tmpstr)) {
@@ -34,6 +44,7 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                 parsed_nodes_.push_back(newnode);
                 ++i;
         }
+       
         std::cout << "Nodes loaded" << std::endl; /*DELETE*/
         /*Parsing Connections*/
         while (std::getline(config, tmpstr)) {
@@ -50,7 +61,8 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                 parsed_connections_.push_back(newconnection);
         }
         std::cout << "Connections loaded" << std::endl;/*DELETE*/
-        /*Parsing Events*/
+
+        /*Parsing Events*/ /*DELETE IT NO NEED*/
         while (std::getline(config, tmpstr)) {
                 if (tmpstr == "END_OF_EVENTS") {break;}
                 std::istringstream tmpstream(tmpstr);
@@ -73,7 +85,11 @@ bool SimulationController::LoadCheckConfiguration(std::fstream& config) {
                 }
         }
         std::cout << "Events loaded" << std::endl;/*DELETE*/
-        
+
+        /*Clearing failbits and EOF*/
+        config.clear();
+        /*Setting position to beginning*/
+        config.seekg(0, std::ios::beg);
         uploaded_ = true;
         return true;
 }
@@ -106,23 +122,36 @@ bool SimulationController::BuildNetwork() {
                /* std::shared_ptr<Node> tmpnode2 = pool_->GetNodeByMac(i->target_mac_);*/
                 if (tmpnode1->RequestConnection(tmpnode2, i)) {
                         std::cout << tmpnode1->GetName() << " connected to " << tmpnode2->GetName() << std::endl; /*DELETE*/
+
+                        /*iterator of network's graph*/
                         std::map<unsigned, std::set<std::pair<unsigned, double>>>::iterator it;
                         /*Filling the network graph*/
+                        /*find the location of initiator in graph*/
                         it = network_graph_.find(tmpnode1->GetId());
-                        it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight()));
+                        /*Adding new connection with channel's weight for initiator node*/
+                        /*inserting a new pair ID - Weight to initiator's connections list*/
+                        /*tmpnode1->GetChannelWeight(tmpnode2->GetId()) - if the node is router we need an ID */
+                        /*to find the correct channel*/
+                        it->second.insert(std::make_pair(tmpnode2->GetId(), tmpnode1->GetChannelWeight(tmpnode2->GetId())));
+                        /*Doing the same for the target node*/
                         it = network_graph_.find(tmpnode2->GetId());
-                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode1->GetChannelWeight()));
+                        it->second.insert(std::make_pair(tmpnode1->GetId(), tmpnode2->GetChannelWeight(tmpnode1->GetId())));
+                        /*GetChannelWeight for routers doesnt work yet*/
                 }
                 
         }
 
-        std::cout << "Our Network : \nNode ID\tConnected To\tChannel's weight\n";
+        std::cout << "Our Network : \n";
         for (auto i : network_graph_) {
-                std::cout << i.first << "\t";
+                std::cout << "Node " << i.first << " Connected to ";
                 for (auto j : i.second) {
-                        std::cout << j.first << "\t" << j.second << "\n";
+                        std::cout << j.first << " with channel's weight (transmission time for 1500bytes packet) " << j.second << "ms ";
                 }
+                std::cout << std::endl;
         }
+
+        std::cout << "Our Pool : \n";
+        pool_->PrintPool();
         return true;
 }
 

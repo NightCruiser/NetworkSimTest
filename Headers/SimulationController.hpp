@@ -5,6 +5,10 @@
 #include <set>
 #include "Creator.hpp"
 
+/**
+ * The Controller class, that handles configuration files reading and checking,
+ * network building and the simulation
+ * */
 
 class SimulationController {
 public:
@@ -27,8 +31,6 @@ private:
         std::map<unsigned, std::set<std::pair<unsigned, double>>> network_graph_; /*weighted*/
         std::map<unsigned, std::set<std::shared_ptr<Event>>> events_map_; /*event timings as a key*/
         std::shared_ptr<AddressPool> pool_;
-        std::list<std::pair<std::shared_ptr<Node>, nodes_>> sim_nodes_;
         std::list<std::shared_ptr<Node>> created_nodes_;
-        std::list<std::shared_ptr<std::thread>> threads_;
 };
 #endif //SIMULATIONCONTROLLER_HPP

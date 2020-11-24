@@ -5,7 +5,7 @@ int main(int argc, char* argv[]) {
 	int choice = 0;
 	SimulationController controller;
 	std::shared_ptr<std::thread> sim_thread; //new3
-	std::fstream config("testconf.txt");
+	std::fstream config;
 	do {
 	std::cout << "1 - Load config\n"
 		<< "2 - Build Fake Network\n"
@@ -14,7 +14,9 @@ int main(int argc, char* argv[]) {
 	std::cin >> choice;
 	switch (choice){
 	case 1 :
-		controller.LoadCheckConfiguration(config); 
+		config.open("testconf.txt", std::ios::in );
+		controller.LoadCheckConfiguration(config);
+		config.close(); 
 		break;
 	case 2 :
 		controller.BuildNetwork();
